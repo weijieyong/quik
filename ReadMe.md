@@ -33,6 +33,15 @@ It does not do:
  - [_Planned_] Reduced-order or transformed constraints, where you perhaps care about the tool point, but not rotation, or other combinations thereof.
  - [_Planned_] Feasibility checks. This code base does not check the computed solutions against joint limits, or check whether the target pose can be reached within the robot's speed and acceleration limits.
 
+## Why use generalized inverse kinematics
+
+If you can and have derived the analytic (closed-form) solution to the inverse kinematics for your robot, by all means use it! It will be faster (likely) and more reliable than a generalized solver, which can fail. Generalized inverse kinematics can be used instead, when:
+ - You aren't able to derive a closed-form solution, or don't want to.
+ - Your robot is kinematically calibrated, so the DH table is perturbed and a closed-form solution doesn't exist.
+ - Your robot is too complex to derive a closed form solution, or lacks a spherical wrist allowing for decoupling of the rotational and translational kinematics.
+ - You want to perform more complex null-space optimization (planned for future implementation in this repository).
+It is worth noting though, that with this implementation of inverse kinematics, if your initial guess is good (e.g. if you use the previous state of the robot), then the algorithm will converge in 5-6 microseconds and with effectively zero error rate. A typical analytical solution will be closer to 1 microsecond. This difference may not be significant enough to make it worthwhile taking the time to derive the full analytical solution.
+
 ## How it works
 
 The QuIK repository is based on the QuIK algorith, the full details of which can be found in the paper [docs/SLloydEtAl2022_QuIK_preprint.pdf](docs/SLloydEtAl2022_QuIK_preprint.pdf). QuIK stands for the *Quick Inverse Kinematics* algorithm, which is a new algorithm for generalized inverse kinematics of serial kinematic chains that has been shown to be 1-2 orders of magnitude faster, and more robust (fails less) than other off-the-shelf algorithms.
@@ -50,7 +59,7 @@ Further details and benchmarks can be found in the paper: [docs/SLloydEtAl2022_Q
 
 ## How to build
 
-For optimal performance, build using the release flag. For this type of iterative code, the compiler optimizations make it run about 10x faster. It will work just fine without it, however.
+This repository can be closed directly into the `src` folder of your ros workspace. For optimal performance, build using the release flag. For this type of iterative code, the compiler optimizations make it run about 10x faster. It will work just fine without it, however.
 ```bash
 colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release
 ```
@@ -322,7 +331,10 @@ A sample python service client is also provided. The code cannot be directly run
 Sample config files are provided in the `config/` directory for the KUKA KR6 robot, the KUKA iiwa7 robot, and the Kinova Jaco robot. All the inputs to the `Robot` and `IKSolver` objects can be specified in these config files. If omitted, a reasonable default value will be used instead.
 
 ## Requirements
-All functions rely on the [Eigen 3.4](https://eigen.tuxfamily.org) linear algebra library, so you will also need to link to an appropriate library.
+All functions rely on the [Eigen 3.4](https://eigen.tuxfamily.org) linear algebra library, so you will also need to link to an appropriate library. If you don't have Eigen on your machine, it can be installed with (on ubuntu):
+```bash
+sudo apt install libeigen3-dev
+```
 
 ## Citations
 
