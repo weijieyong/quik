@@ -40,6 +40,7 @@ If you can and have derived the analytic (closed-form) solution to the inverse k
  - Your robot is kinematically calibrated, so the DH table is perturbed and a closed-form solution doesn't exist.
  - Your robot is too complex to derive a closed form solution, or lacks a spherical wrist allowing for decoupling of the rotational and translational kinematics.
  - You want to perform more complex null-space optimization (planned for future implementation in this repository).
+
 It is worth noting though, that with this implementation of inverse kinematics, if your initial guess is good (e.g. if you use the previous state of the robot), then the algorithm will converge in 5-6 microseconds and with effectively zero error rate. A typical analytical solution will be closer to 1 microsecond. This difference may not be significant enough to make it worthwhile taking the time to derive the full analytical solution.
 
 ## How it works
