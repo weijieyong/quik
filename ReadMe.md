@@ -1,3 +1,17 @@
+> [!NOTE]  
+> This fork of QuIK removes all ROS dependencies and is intended for use as a standalone C++ kinematics library. Only Eigen is required (automatically fetched when building with CMake). 
+
+## Changelog: 
+
+- **16-05-25**
+  - update CMake config: no longer references ROS packages or ament. Only Eigen is required and is automatically fetched using FetchContent.
+  - modified standalone [`/src/sample_cpp_usage.cpp`](/src/sample_cpp_usage.cpp):
+    - to use factory calibrated parameters obtained from UR5e.
+    - Initial guess for IK is now random instead of a fixed offset.
+    - Increased logging of joint angles, initial guesses, and pose details for better debugging and analysis.
+
+---
+
 # QuIK: An ultra-fast and highly robust kinematics library for C++ or ROS2 using DH parameters
 
 QuIK is a hyper-efficient C++ kinematics library for serial manipulators. It is based on the novel QuIK algorithm, [published in IEEE-TRO](http://dx.doi.org/10.1109/TRO.2022.3162954), that uses 3rd-order velocity kinematics to solve generalized inverse kinematics significantly faster, and significantly more reliably that existing inverse kinematics packages. QuIK uses the Denevit-Hartenberg convention for kinematics, which is readily available for most manipulators and results in a more computationally efficient formulation of kinematics.
