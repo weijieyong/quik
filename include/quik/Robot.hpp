@@ -50,6 +50,7 @@
 
 #pragma once
 
+#include <iostream>
 #include "Eigen/Dense"
 #include "quik/geometry.hpp"
 #include "quik/utilities.hpp"
